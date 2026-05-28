@@ -67,18 +67,21 @@ Implemented JWT authentication and protected routes using Spring Security.
 
 # 📸 Project Screenshots
 
-<img width="1879" height="912" alt="Screenshot 2026-05-28 221721" src="https://github.com/user-attachments/assets/b9919fe9-b3bd-4958-9e9f-04cdc1b30003" />
+<img width="1117" height="900" alt="Screenshot 2026-05-28 221610" src="https://github.com/user-attachments/assets/78507b32-6865-44c7-8e02-80f877c935cb" />
+
 
 
 
 
 ## Live Incident Map
 
-(Add Map Screenshot Here)
+<img width="1918" height="893" alt="Screenshot 2026-05-28 221817" src="https://github.com/user-attachments/assets/25e103bf-5ad9-44dc-8236-341fd39a2b70" />
+
 
 ## Analytics Dashboard
 
-(Add Analytics Screenshot Here)
+<img width="1879" height="912" alt="Screenshot 2026-05-28 221721" src="https://github.com/user-attachments/assets/58443cb6-5c8e-42f2-be43-0a3799b4b1f9" />
+
 
 ---
 
