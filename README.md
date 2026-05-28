@@ -1,79 +1,116 @@
 # 🚨 AEGIS AI – Emergency Response & Disaster Management System
 
-AEGIS AI is a full-stack AI-powered emergency response platform designed to manage and monitor real-time disaster incidents efficiently. The system provides secure JWT authentication, incident reporting, analytics dashboards, AI emergency assistance, and live incident mapping for faster response coordination.
+AI-powered full-stack emergency response platform built to manage disaster incidents, emergency analytics, live monitoring, and intelligent response coordination.
 
 ---
 
-# 🔥 Features
+## 👨‍💻 About Project
 
-* 🔐 JWT Authentication & Secure Login
-* 🚨 Incident Reporting & Management
-* 📊 Real-Time Analytics Dashboard
-* 🤖 AI Emergency Assistant
-* 🗺️ Live Incident Map Visualization
-* 📈 Pie Charts & Severity Analytics
-* 👨‍💼 Protected Admin Dashboard
-* ⚡ REST APIs using Spring Boot
-* 🎨 Modern React Frontend UI
+* 🌍 Real-time disaster monitoring platform
+* 🚨 Emergency incident reporting system
+* 📍 Live incident map visualization
+* 📊 Analytics dashboard for emergency tracking
+* 🤖 AI-powered emergency assistant
+* 🔐 JWT Authentication & Role-Based Access
+* 📱 Responsive Full Stack Web Application
 
 ---
 
-# 🛠️ Tech Stack
+## 🛠️ Tech Stack
 
-## Frontend
+### Frontend
 
 * React.js
-* Vite
-* Axios
-* React Router DOM
-* Chart.js
+* Tailwind CSS
 * React Leaflet
+* Chart.js
 
-## Backend
+### Backend
 
-* Java
 * Spring Boot
 * Spring Security
-* JWT Authentication
-* Maven
 * REST APIs
+* JWT Authentication
 
-## Database
+### Database
 
 * MySQL
 
----
+### Tools & Platforms
 
-# 📌 Modules
-
-* Authentication System
-* Incident Management
-* AI Assistant
-* Analytics Dashboard
-* Live Emergency Mapping
-* Protected Routes & Security
+* GitHub
+* Postman
+* VS Code
+* IntelliJ IDEA
 
 ---
 
-# 🚀 Future Enhancements
+# 🚀 Featured Modules
 
+## 📍 Live Incident Mapping
+
+Track emergency incidents with location-based monitoring using React Leaflet.
+
+## 📊 Emergency Analytics Dashboard
+
+Visualize disaster data and emergency reports using Chart.js.
+
+## 🤖 AI Emergency Assistant
+
+AI-based emergency help and response guidance system.
+
+## 🔐 Secure Authentication
+
+Implemented JWT authentication and protected routes using Spring Security.
+
+---
+
+# 📸 Project Screenshots
+
+<img width="1879" height="912" alt="Screenshot 2026-05-28 221721" src="https://github.com/user-attachments/assets/b9919fe9-b3bd-4958-9e9f-04cdc1b30003" />
+
+
+
+
+## Live Incident Map
+
+(Add Map Screenshot Here)
+
+## Analytics Dashboard
+
+(Add Analytics Screenshot Here)
+
+---
+
+# ⚙️ Installation
+
+```bash
+git clone https://github.com/harshpandey9198/aegis-ai-emergency-response-system.git
+```
+
+```bash
+cd aegis-ai-emergency-response-system
+```
+
+```bash
+npm install
+npm run dev
+```
+
+---
+
+# 🌐 Future Improvements
+
+* AI-based disaster prediction
+* SMS alert system
+* Weather API integration
+* Emergency resource tracking
 * Real-time notifications
-* WebSocket integration
-* AI risk prediction
-* Google Maps API integration
-* Email/SMS alerts
-* Docker deployment
-* Cloud hosting
 
 ---
 
 # 👨‍💻 Developed By
 
 Harsh Pandey
-BCA Student | Full Stack Developer | Java & React Enthusiast
 
----
-
-# ⭐ Project Goal
-
-To build a smart emergency response system that helps authorities monitor incidents, analyze emergency data, and provide faster disaster response using AI-powered solutions.
+Full Stack Developer | React.js | Spring Boot | Java | AI-Powered Web Applications
