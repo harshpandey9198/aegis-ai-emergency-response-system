@@ -10,10 +10,10 @@ import java.util.Map;
 @Service
 public class AiChatService {
 
-    @Value("${gemini.api.key}")
+    @Value("${gemini.api.key:}")
     private String geminiApiKey;
 
-    @Value("${gemini.api.url}")
+    @Value("${gemini.api.url:}")
     private String geminiApiUrl;
 
     private final RestClient restClient;
@@ -28,11 +28,15 @@ public class AiChatService {
             return "Please describe the emergency clearly.";
         }
 
+        if (geminiApiKey == null || geminiApiKey.isBlank() || geminiApiUrl == null || geminiApiUrl.isBlank()) {
+            return getOfflineEmergencyGuidance(message);
+        }
+
         try {
             String prompt =
                     "You are AEGIS AI, an emergency response assistant. " +
                     "Give short, practical and safety-focused guidance. " +
-                    "Do not panic the user. Use simple language. " +
+                    "Use simple language. " +
                     "Emergency details: " + message;
 
             Map<String, Object> requestBody = Map.of(
@@ -56,18 +60,60 @@ public class AiChatService {
             List candidates = (List) response.get("candidates");
 
             if (candidates == null || candidates.isEmpty()) {
-                return "AI could not generate a response. Please try again.";
+                return getOfflineEmergencyGuidance(message);
             }
 
             Map firstCandidate = (Map) candidates.get(0);
             Map content = (Map) firstCandidate.get("content");
             List parts = (List) content.get("parts");
-            Map firstPart = (Map) parts.get(0);
 
-            return firstPart.get("text").toString();
+            if (parts == null || parts.isEmpty()) {
+                return getOfflineEmergencyGuidance(message);
+            }
+
+            Map firstPart = (Map) parts.get(0);
+            Object text = firstPart.get("text");
+
+            if (text == null) {
+                return getOfflineEmergencyGuidance(message);
+            }
+
+            return text.toString();
 
         } catch (Exception e) {
-            return "AI service is currently unavailable. Please contact emergency services immediately if this is urgent.";
+            e.printStackTrace();
+            return getOfflineEmergencyGuidance(message);
         }
+    }
+
+    private String getOfflineEmergencyGuidance(String message) {
+
+        String lower = message.toLowerCase();
+
+        if (lower.contains("fire") || lower.contains("smoke")) {
+            return "Fire emergency detected. Leave the building immediately, avoid elevators, cover your nose and mouth if there is smoke, call fire services, and move to a safe open area.";
+        }
+
+        if (lower.contains("accident") || lower.contains("crash")) {
+            return "Accident emergency detected. Move to a safe place, call emergency services, do not move seriously injured people unless there is immediate danger, and wait for medical help.";
+        }
+
+        if (lower.contains("medical") || lower.contains("heart") || lower.contains("unconscious")) {
+            return "Medical emergency detected. Call an ambulance immediately, keep the person calm, check breathing, and do not give food or water unless advised by medical professionals.";
+        }
+
+        if (lower.contains("flood") || lower.contains("water")) {
+            return "Flood emergency detected. Move to higher ground, avoid walking or driving through flood water, switch off electricity if safe, and follow local emergency alerts.";
+        }
+
+        if (lower.contains("earthquake")) {
+            return "Earthquake emergency detected. Drop, cover, and hold on. Stay away from windows, do not use elevators, and move to an open area after shaking stops.";
+        }
+
+        if (lower.contains("crime") || lower.contains("theft") || lower.contains("robbery")) {
+            return "Crime emergency detected. Move to a safe location, avoid direct confrontation, call police immediately, and share your location with trusted contacts.";
+        }
+
+        return "Emergency guidance is available in offline mode. Stay calm, move to a safe location, contact emergency services immediately, and follow official safety instructions.";
     }
 }
