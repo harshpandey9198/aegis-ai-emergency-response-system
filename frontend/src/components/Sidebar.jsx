@@ -42,9 +42,7 @@ function Sidebar() {
           AI Assistant
         </Link>
 
-        <Link to="/map" style={linkStyle}>
-          Live Map
-        </Link>
+        
 
         <button
           onClick={() => {

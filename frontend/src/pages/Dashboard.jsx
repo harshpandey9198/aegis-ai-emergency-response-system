@@ -2,12 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../services/api";
 import Sidebar from "../components/Sidebar";
-import {
-  FaFire,
-  FaCheckCircle,
-  FaExclamationTriangle,
-  FaUsers
-} from "react-icons/fa";
 
 import {
   Chart as ChartJS,
@@ -32,7 +26,6 @@ ChartJS.register(
 
 function Dashboard() {
   const navigate = useNavigate();
-
   const [summary, setSummary] = useState(null);
 
   const loadSummary = async () => {
@@ -80,26 +73,13 @@ function Dashboard() {
   };
 
   return (
-    <div
-      style={{
-        background: "#020617",
-        color: "white",
-        minHeight: "100vh",
-      }}
-    >
+    <div style={pageStyle}>
       <Sidebar />
 
-      <main
-        style={{
-          marginLeft: "270px",
-          padding: "35px",
-        }}
-      >
-        <h1 style={{ fontSize: "42px", textAlign: "center" }}>
-          AEGIS AI Dashboard
-        </h1>
+      <main style={mainStyle}>
+        <h1 style={mainTitle}>AEGIS AI Dashboard</h1>
 
-        <p style={{ textAlign: "center", color: "#94a3b8" }}>
+        <p style={subtitle}>
           AI Powered Emergency Response & Disaster Monitoring System
         </p>
 
@@ -128,9 +108,9 @@ function Dashboard() {
         ) : (
           <>
             <div style={cardGrid}>
-              <Card title="Total Incidents" value={summary.totalIncidents || 0} icon={<FaExclamationTriangle size={30} />} />
+              <Card title="Total Incidents" value={summary.totalIncidents || 0} />
               <Card title="Pending" value={summary.pendingIncidents || 0} />
-              <Card title="Resolved" value={summary.resolvedIncidents || 0 } icon={<FaCheckCircle size={30} />} />
+              <Card title="Resolved" value={summary.resolvedIncidents || 0} />
               <Card title="Dispatched" value={summary.dispatchedIncidents || 0} />
 
               <Card title="High Severity" value={summary.highSeverity || 0} />
@@ -138,38 +118,37 @@ function Dashboard() {
               <Card title="Fire Incidents" value={summary.fireIncidents || 0} />
               <Card title="Accidents" value={summary.accidentIncidents || 0} />
 
-              <Card title="Total Teams" value={summary.totalTeams || 0}  icon={<FaUsers size={30} />}/>
+              <Card title="Total Teams" value={summary.totalTeams || 0} />
               <Card title="Available Teams" value={summary.availableTeams || 0} />
               <Card title="Busy Teams" value={summary.busyTeams || 0} />
               <Card title="Medical Cases" value={summary.medicalIncidents || 0} />
             </div>
 
-            <div style={chartGrid}>
+            <div style={dashboardGrid}>
               <div style={chartCard}>
-                <h2 style={{ textAlign: "center" }}>Incident Type Analysis</h2>
-                <div style={{ maxWidth: "420px", margin: "0 auto" }}>
+                <h2 style={sectionTitle}>Incident Type Analysis</h2>
+
+                <div style={pieWrapper}>
                   <Pie data={incidentTypeData} />
                 </div>
               </div>
-              <div
- style={{
-   background:"#dc2626",
-   padding:"25px",
-   borderRadius:"15px",
-   marginBottom:"25px"
- }}
->
-   <h1>AEGIS AI Emergency Response System</h1>
 
-   <p>
-      Real-Time Incident Monitoring,
-      AI Emergency Guidance,
-      Response Team Coordination
-   </p>
-</div>
+              <div style={heroCard}>
+                <h2 style={heroTitle}>
+                  AEGIS AI
+                  <br />
+                  Emergency Response System
+                </h2>
+
+                <p style={heroText}>
+                  Real-Time Incident Monitoring, AI Emergency Guidance, Response
+                  Team Coordination
+                </p>
+              </div>
 
               <div style={chartCard}>
-                <h2 style={{ textAlign: "center" }}>Severity Breakdown</h2>
+                <h2 style={sectionTitle}>Severity Breakdown</h2>
+
                 <Bar data={severityData} />
               </div>
             </div>
@@ -183,14 +162,33 @@ function Dashboard() {
 function Card({ title, value }) {
   return (
     <div style={cardStyle}>
-      <h3 style={{ color: "#94a3b8", fontSize: "16px" }}>{title}</h3>
-
-      <h1 style={{ fontSize: "38px", color: "#f87171", marginTop: "10px" }}>
-        {value}
-      </h1>
+      <h3 style={cardTitle}>{title}</h3>
+      <h1 style={cardValue}>{value}</h1>
     </div>
   );
 }
+
+const pageStyle = {
+  background: "#020617",
+  color: "white",
+  minHeight: "100vh",
+};
+
+const mainStyle = {
+  marginLeft: "270px",
+  padding: "35px",
+};
+
+const mainTitle = {
+  fontSize: "42px",
+  textAlign: "center",
+  marginBottom: "8px",
+};
+
+const subtitle = {
+  textAlign: "center",
+  color: "#94a3b8",
+};
 
 const navBox = {
   display: "flex",
@@ -208,12 +206,12 @@ const navButton = {
   border: "none",
   borderRadius: "8px",
   cursor: "pointer",
-  fontSize: "16px",
+  fontSize: "15px",
 };
 
 const cardGrid = {
   display: "grid",
-  gridTemplateColumns: "repeat(4, 1fr)",
+  gridTemplateColumns: "repeat(4, minmax(160px, 1fr))",
   gap: "20px",
   marginTop: "30px",
 };
@@ -227,11 +225,24 @@ const cardStyle = {
   boxShadow: "0 10px 25px rgba(0,0,0,0.3)",
 };
 
-const chartGrid = {
+const cardTitle = {
+  color: "#93c5fd",
+  fontSize: "15px",
+  marginBottom: "10px",
+};
+
+const cardValue = {
+  fontSize: "36px",
+  color: "#fb7185",
+  margin: 0,
+};
+
+const dashboardGrid = {
   display: "grid",
   gridTemplateColumns: "1fr 1fr",
   gap: "25px",
   marginTop: "35px",
+  alignItems: "stretch",
 };
 
 const chartCard = {
@@ -240,6 +251,43 @@ const chartCard = {
   borderRadius: "14px",
   border: "1px solid #1e293b",
   boxShadow: "0 10px 25px rgba(0,0,0,0.3)",
+};
+
+const sectionTitle = {
+  textAlign: "center",
+  fontSize: "22px",
+  marginBottom: "15px",
+};
+
+const pieWrapper = {
+  maxWidth: "420px",
+  margin: "0 auto",
+};
+
+const heroCard = {
+  background: "linear-gradient(135deg, #dc2626, #991b1b)",
+  padding: "35px",
+  borderRadius: "14px",
+  textAlign: "center",
+  border: "1px solid #ef4444",
+  boxShadow: "0 10px 25px rgba(0,0,0,0.3)",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+};
+
+const heroTitle = {
+  fontSize: "32px",
+  fontWeight: "700",
+  lineHeight: "1.2",
+  marginBottom: "18px",
+};
+
+const heroText = {
+  fontSize: "16px",
+  lineHeight: "1.6",
+  maxWidth: "420px",
+  margin: "0 auto",
 };
 
 export default Dashboard;
