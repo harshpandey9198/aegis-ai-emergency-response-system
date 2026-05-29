@@ -5,94 +5,92 @@ import Sidebar from "../components/Sidebar";
 function Assistant() {
   const [message, setMessage] = useState("");
   const [reply, setReply] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const askAI = async () => {
+  const handleAskAI = async () => {
+    if (!message.trim()) {
+      alert("Please enter your question");
+      return;
+    }
+
     try {
-      const response = await API.post("/ai/chat", {
+      setLoading(true);
+      setReply("");
+
+      const response = await API.post("/api/ai/chat", {
         message: message,
       });
 
-      setReply(response.data.reply);
+      setReply(response.data.reply || response.data || "No response received");
     } catch (error) {
-      alert("AI assistant failed");
+      console.error(error);
+      alert("AI Assistant request failed");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div
-      style={{
-        background: "#020617",
-        color: "white",
-        minHeight: "100vh",
-      }}
-    >
+    <div style={{ display: "flex", minHeight: "100vh", background: "#020617" }}>
       <Sidebar />
 
-      <main
-        style={{
-          marginLeft: "270px",
-          padding: "35px",
-        }}
-      >
-        <h1 style={{ fontSize: "42px", textAlign: "center" }}>
-          AEGIS AI Assistant
-        </h1>
+      <div style={{ flex: 1, padding: "30px", color: "white" }}>
+        <h1>AI Emergency Assistant</h1>
+        <p style={{ color: "#94a3b8" }}>
+          Ask AI for emergency response guidance and incident support.
+        </p>
 
-        <div
+        <textarea
+          placeholder="Example: What should response teams do during a fire emergency?"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
           style={{
+            width: "100%",
+            height: "160px",
+            padding: "15px",
+            marginTop: "20px",
+            borderRadius: "10px",
+            border: "1px solid #334155",
             background: "#0f172a",
-            padding: "30px",
-            borderRadius: "14px",
-            marginTop: "30px",
-            border: "1px solid #1e293b",
+            color: "white",
+            fontSize: "16px",
+          }}
+        />
+
+        <button
+          onClick={handleAskAI}
+          disabled={loading}
+          style={{
+            marginTop: "20px",
+            padding: "12px 22px",
+            background: "#2563eb",
+            color: "white",
+            border: "none",
+            borderRadius: "8px",
+            cursor: "pointer",
+            fontWeight: "bold",
           }}
         >
-          <textarea
-            placeholder="Describe emergency... example: Fire and smoke in building"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            style={{
-              width: "100%",
-              height: "130px",
-              padding: "15px",
-              background: "#020617",
-              color: "white",
-              border: "1px solid #334155",
-              borderRadius: "10px",
-            }}
-          />
+          {loading ? "Thinking..." : "Ask AI"}
+        </button>
 
-          <button
-            onClick={askAI}
+        {reply && (
+          <div
             style={{
-              marginTop: "20px",
-              padding: "12px 25px",
-              background: "red",
-              color: "white",
-              border: "none",
-              borderRadius: "8px",
-              cursor: "pointer",
+              marginTop: "25px",
+              padding: "20px",
+              background: "#0f172a",
+              borderRadius: "10px",
+              border: "1px solid #334155",
+              whiteSpace: "pre-wrap",
+              lineHeight: "1.6",
             }}
           >
-            Ask AI
-          </button>
-
-          {reply && (
-            <div
-              style={{
-                marginTop: "25px",
-                padding: "20px",
-                background: "#020617",
-                borderRadius: "10px",
-                border: "1px solid #334155",
-              }}
-            >
-              <h3>AI Guidance:</h3>
-              <p>{reply}</p>
-            </div>
-          )}
-        </div>
-      </main>
+            <h3>AI Response</h3>
+            <p>{reply}</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

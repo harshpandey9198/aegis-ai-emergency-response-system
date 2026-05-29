@@ -31,11 +31,18 @@ function Login() {
     } catch (error) {
       console.error(error);
 
-      if (error.response) {
-        alert(error.response.data || "Invalid Credentials");
-      } else {
-        alert("Server Connection Failed");
-      }
+     if (error.response) {
+  console.log("Error Response:", error.response.data);
+
+  const errorMessage =
+    error.response.data?.message ||
+    error.response.data?.error ||
+    JSON.stringify(error.response.data);
+
+  alert(errorMessage);
+} else {
+  alert("Server Connection Failed");
+}
     } finally {
       setLoading(false);
     }

@@ -30,7 +30,7 @@ function Dashboard() {
 
   const loadSummary = async () => {
     try {
-      const response = await API.get("/analytics/summary");
+      const response = await API.get("/api/analytics/summary");
       setSummary(response.data);
     } catch (error) {
       alert("Analytics load failed. Please check backend.");
