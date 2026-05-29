@@ -44,18 +44,17 @@ public class AuthService {
 
         return new AuthResponse(token, "User Registered Successfully");
     }
+public AuthResponse login(LoginRequest request) {
 
-    public AuthResponse login(LoginRequest request) {
+    User user = userRepository.findByEmail(request.getEmail())
+            .orElseThrow(() -> new RuntimeException("Invalid Email"));
 
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid Password");
-        }
-
-        String token = jwtService.generateToken(user);
-
-        return new AuthResponse(token, "Login Successful");
+    if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+        throw new RuntimeException("Invalid Password");
     }
+
+    String token = jwtService.generateToken(user);
+
+    return new AuthResponse(token, "Login Successful");
+}
 }
