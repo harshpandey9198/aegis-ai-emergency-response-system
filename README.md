@@ -160,29 +160,27 @@ Gemini API
 
 ## Login Page
 
-![Login](screenshots/login.png)
+<img src="screenshots/login.png" width="900"/>
 
 ## Dashboard
 
-![Dashboard](screenshots/dashboard.png)
+<img src="screenshots/dashboard.png" width="900"/>
 
 ## Incident Management
 
-![Incidents](screenshots/incidents.png)
+<img src="screenshots/incidents.png" width="900"/>
 
 ## Response Teams
 
-![Response Teams](screenshots/teams.png)
+<img src="screenshots/teams.png" width="900"/>
 
 ## Live Incident Map
 
-![Live Map](screenshots/livemap.png)
+<img src="screenshots/livemap.png" width="900"/>
 
 ## AI Assistant
 
-![Assistant](screenshots/assistant.png)
-
----
+<img src="screenshots/assistant.png" width="900"/>
 
 # 🔮 Future Enhancements
 
