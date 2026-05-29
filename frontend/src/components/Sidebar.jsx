@@ -34,6 +34,9 @@ function Sidebar() {
         <Link to="/incidents" style={linkStyle}>
           Incidents
         </Link>
+        <Link to="/map" style={linkStyle}>
+  Live Map
+</Link>
 
         <Link to="/assistant" style={linkStyle}>
           AI Assistant
