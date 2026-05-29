@@ -1,119 +1,249 @@
-# 🚨 AEGIS AI – Emergency Response & Disaster Management System
+# 🚨 AEGIS AI - Emergency Response System
 
-AI-powered full-stack emergency response platform built to manage disaster incidents, emergency analytics, live monitoring, and intelligent response coordination.
-
----
-
-## 👨‍💻 About Project
-
-* 🌍 Real-time disaster monitoring platform
-* 🚨 Emergency incident reporting system
-* 📍 Live incident map visualization
-* 📊 Analytics dashboard for emergency tracking
-* 🤖 AI-powered emergency assistant
-* 🔐 JWT Authentication & Role-Based Access
-* 📱 Responsive Full Stack Web Application
+An AI-Powered Emergency Response and Disaster Management Platform built using React, Spring Boot, MySQL, JWT Authentication, and Google Gemini AI.
 
 ---
 
-## 🛠️ Tech Stack
+# 📌 Project Overview
 
-### Frontend
+AEGIS AI is a full-stack emergency response management system designed to help organizations monitor, manage, and respond to emergency incidents efficiently.
 
-* React.js
-* Tailwind CSS
-* React Leaflet
-* Chart.js
+The platform enables users to report incidents, manage response teams, visualize emergencies on a live map, monitor analytics, and receive AI-powered emergency guidance.
 
-### Backend
+This project demonstrates the integration of modern web technologies, cloud databases, AI services, authentication systems, and real-time monitoring features.
 
-* Spring Boot
-* Spring Security
-* REST APIs
+---
+
+# 🎯 Problem Statement
+
+During emergencies such as fires, accidents, floods, or medical incidents, organizations often face challenges in:
+
+* Tracking incidents efficiently
+* Managing emergency response teams
+* Monitoring incident locations
+* Coordinating emergency operations
+* Providing quick guidance during disasters
+
+AEGIS AI addresses these challenges through a centralized emergency management platform.
+
+---
+
+# 🚀 Key Features
+
+## 🔐 Authentication System
+
+* User Registration
+* User Login
 * JWT Authentication
-
-### Database
-
-* MySQL
-
-### Tools & Platforms
-
-* GitHub
-* Postman
-* VS Code
-* IntelliJ IDEA
+* Protected Routes
+* Secure Access Control
 
 ---
 
-# 🚀 Featured Modules
+## 🚨 Incident Management
 
-## 📍 Live Incident Mapping
+* Create Emergency Incidents
+* View All Incidents
+* Delete Incidents
+* Track Incident Status
+* Manage Severity Levels
+* Store Incident Locations
 
-Track emergency incidents with location-based monitoring using React Leaflet.
+---
 
-## 📊 Emergency Analytics Dashboard
+## 👨‍🚒 Response Team Management
 
-Visualize disaster data and emergency reports using Chart.js.
+* Create Response Teams
+* Manage Team Information
+* Track Team Availability
+* View Team Status
+* Assign Teams to Emergencies
+
+---
+
+## 🗺️ Live Incident Map
+
+* Real-Time Incident Visualization
+* Location-Based Monitoring
+* Emergency Marker Display
+* Severity-Based Tracking
+* Interactive Map Interface
+
+---
 
 ## 🤖 AI Emergency Assistant
 
-AI-based emergency help and response guidance system.
+Powered by Google Gemini AI.
 
-## 🔐 Secure Authentication
+Features:
 
-Implemented JWT authentication and protected routes using Spring Security.
+* Emergency Guidance
+* Disaster Response Suggestions
+* Safety Recommendations
+* AI-Based Assistance
+
+---
+
+## 📊 Analytics Dashboard
+
+Dashboard provides:
+
+* Total Incidents
+* Pending Incidents
+* Resolved Incidents
+* Fire Cases
+* Medical Cases
+* Flood Cases
+* High Severity Cases
+* Response Team Statistics
+
+---
+
+# 🛠️ Tech Stack
+
+## Frontend
+
+* React.js
+* React Router
+* Axios
+* Leaflet Maps
+* CSS
+
+## Backend
+
+* Spring Boot
+* Spring Security
+* JWT Authentication
+* REST APIs
+
+## Database
+
+* MySQL (Aiven Cloud)
+
+## AI Integration
+
+* Google Gemini API
+
+## Deployment
+
+* Frontend: Vercel
+* Backend: Render
+
+## Version Control
+
+* Git
+* GitHub
+
+---
+
+# 🏗️ System Architecture
+
+```text
+User
+ ↓
+React Frontend
+ ↓
+Spring Boot REST APIs
+ ↓
+MySQL Database (Aiven)
+ ↓
+Analytics & Incident Data
+
+AI Assistant
+ ↓
+Gemini API
+```
 
 ---
 
 # 📸 Project Screenshots
 
-<img width="1117" height="900" alt="Screenshot 2026-05-28 221610" src="https://github.com/user-attachments/assets/78507b32-6865-44c7-8e02-80f877c935cb" />
+## Login Page
 
+![Login](screenshots/login.png)
 
+## Dashboard
 
+![Dashboard](screenshots/dashboard.png)
 
+## Incident Management
+
+![Incidents](screenshots/incidents.png)
+
+## Response Teams
+
+![Response Teams](screenshots/teams.png)
 
 ## Live Incident Map
 
-<img width="1918" height="893" alt="Screenshot 2026-05-28 221817" src="https://github.com/user-attachments/assets/25e103bf-5ad9-44dc-8236-341fd39a2b70" />
+![Live Map](screenshots/livemap.png)
 
+## AI Assistant
 
-## Analytics Dashboard
-
-<img width="1879" height="912" alt="Screenshot 2026-05-28 221721" src="https://github.com/user-attachments/assets/58443cb6-5c8e-42f2-be43-0a3799b4b1f9" />
-
+![Assistant](screenshots/assistant.png)
 
 ---
 
-# ⚙️ Installation
+# 🔮 Future Enhancements
 
-```bash
-git clone https://github.com/harshpandey9198/aegis-ai-emergency-response-system.git
-```
+Future versions may include:
 
-```bash
-cd aegis-ai-emergency-response-system
-```
-
-```bash
-npm install
-npm run dev
-```
-
----
-
-# 🌐 Future Improvements
-
-* AI-based disaster prediction
-* SMS alert system
-* Weather API integration
-* Emergency resource tracking
-* Real-time notifications
+* CCTV-Based Fire Detection
+* IoT Sensor Integration
+* Automatic Incident Detection
+* SMS Alerts
+* Email Notifications
+* Push Notifications
+* Role-Based Access Control
+* Predictive Disaster Analytics
+* AI-Powered Risk Assessment
 
 ---
 
-# 👨‍💻 Developed By
+# 💡 Real World Applications
 
-Harsh Pandey
+* Disaster Management Authorities
+* Smart City Projects
+* Hospitals
+* Fire Departments
+* Police Departments
+* Airports
+* Railway Stations
+* Large Corporate Campuses
 
-Full Stack Developer | React.js | Spring Boot | Java | AI-Powered Web Applications
+---
+
+# 👨‍💻 Developer
+
+### Harsh Pandey
+
+BCA Student | Full Stack Developer
+
+Skills:
+
+* Java
+* Spring Boot
+* React.js
+* JavaScript
+* SQL
+* REST APIs
+* JWT Authentication
+* AI Integration
+
+---
+
+# ⭐ Project Status
+
+✅ Completed
+
+✅ Fully Functional
+
+✅ Cloud Deployed
+
+✅ Resume Ready
+
+✅ Portfolio Ready
+
+---
+
+If you found this project useful, consider giving it a ⭐ on GitHub.
