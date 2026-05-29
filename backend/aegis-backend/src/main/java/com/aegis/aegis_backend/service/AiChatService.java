@@ -1,9 +1,26 @@
 package com.aegis.aegis_backend.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
+
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class AiChatService {
+
+    @Value("${gemini.api.key}")
+    private String geminiApiKey;
+
+    @Value("${gemini.api.url}")
+    private String geminiApiUrl;
+
+    private final RestClient restClient;
+
+    public AiChatService() {
+        this.restClient = RestClient.builder().build();
+    }
 
     public String generateReply(String message) {
 
@@ -11,28 +28,46 @@ public class AiChatService {
             return "Please describe the emergency clearly.";
         }
 
-        String text = message.toLowerCase();
+        try {
+            String prompt =
+                    "You are AEGIS AI, an emergency response assistant. " +
+                    "Give short, practical and safety-focused guidance. " +
+                    "Do not panic the user. Use simple language. " +
+                    "Emergency details: " + message;
 
-        if (text.contains("fire") || text.contains("smoke")) {
-            return "Fire emergency detected. Move away from smoke, avoid lifts, call fire services, and evacuate through emergency exits.";
+            Map<String, Object> requestBody = Map.of(
+                    "contents", List.of(
+                            Map.of(
+                                    "parts", List.of(
+                                            Map.of("text", prompt)
+                                    )
+                            )
+                    )
+            );
+
+            Map response = restClient.post()
+                    .uri(geminiApiUrl)
+                    .header("x-goog-api-key", geminiApiKey)
+                    .header("Content-Type", "application/json")
+                    .body(requestBody)
+                    .retrieve()
+                    .body(Map.class);
+
+            List candidates = (List) response.get("candidates");
+
+            if (candidates == null || candidates.isEmpty()) {
+                return "AI could not generate a response. Please try again.";
+            }
+
+            Map firstCandidate = (Map) candidates.get(0);
+            Map content = (Map) firstCandidate.get("content");
+            List parts = (List) content.get("parts");
+            Map firstPart = (Map) parts.get(0);
+
+            return firstPart.get("text").toString();
+
+        } catch (Exception e) {
+            return "AI service is currently unavailable. Please contact emergency services immediately if this is urgent.";
         }
-
-        if (text.contains("accident") || text.contains("crash")) {
-            return "Accident detected. Check injuries, avoid moving severely injured people, call ambulance, and keep the area safe.";
-        }
-
-        if (text.contains("flood") || text.contains("water")) {
-            return "Flood risk detected. Move to higher ground, avoid electric poles, do not walk through fast-moving water, and wait for rescue.";
-        }
-
-        if (text.contains("heart") || text.contains("medical") || text.contains("breathing")) {
-            return "Medical emergency detected. Call ambulance immediately, keep the patient calm, check breathing, and start CPR only if trained.";
-        }
-
-        if (text.contains("crime") || text.contains("theft") || text.contains("robbery")) {
-            return "Crime emergency detected. Move to a safe place, avoid direct confrontation, call police, and share location details.";
-        }
-
-        return "I understand. Please share emergency type, location, severity, and whether anyone is injured so the system can guide better.";
     }
 }
