@@ -10,43 +10,17 @@ function Teams() {
     leaderName: "",
     contactNumber: "",
     specialization: "",
-    status: "AVAILABLE",
     currentLocation: "",
+    status: "AVAILABLE",
   });
 
   const loadTeams = async () => {
     try {
-      const response = await API.get("/teams");
+      const response = await API.get("/api/teams");
       setTeams(response.data);
     } catch (error) {
+      console.error("Failed to load teams:", error);
       alert("Failed to load teams");
-    }
-  };
-
-  const createTeam = async () => {
-    try {
-      await API.post("/teams", form);
-      setForm({
-        teamName: "",
-        leaderName: "",
-        contactNumber: "",
-        specialization: "",
-        status: "AVAILABLE",
-        currentLocation: "",
-      });
-      loadTeams();
-      alert("Team created successfully");
-    } catch (error) {
-      alert("Team creation failed");
-    }
-  };
-
-  const updateStatus = async (id, status) => {
-    try {
-      await API.put(`/teams/${id}/status?status=${status}`);
-      loadTeams();
-    } catch (error) {
-      alert("Status update failed");
     }
   };
 
@@ -54,86 +28,148 @@ function Teams() {
     loadTeams();
   }, []);
 
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const createTeam = async () => {
+    if (
+      !form.teamName ||
+      !form.leaderName ||
+      !form.contactNumber ||
+      !form.specialization ||
+      !form.currentLocation
+    ) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    try {
+      await API.post("/api/teams", form);
+
+      alert("Team created successfully ✅");
+
+      setForm({
+        teamName: "",
+        leaderName: "",
+        contactNumber: "",
+        specialization: "",
+        currentLocation: "",
+        status: "AVAILABLE",
+      });
+
+      loadTeams();
+    } catch (error) {
+      console.error("Failed to create team:", error);
+      alert("Failed to create team");
+    }
+  };
+
+  const deleteTeam = async (id) => {
+    try {
+      await API.delete(`/api/teams/${id}`);
+      alert("Team deleted successfully");
+      loadTeams();
+    } catch (error) {
+      console.error("Failed to delete team:", error);
+      alert("Failed to delete team");
+    }
+  };
+
   return (
-    <div style={{ background: "#020617", color: "white", minHeight: "100vh" }}>
+    <div style={pageStyle}>
       <Sidebar />
 
-      <main style={{ marginLeft: "270px", padding: "35px" }}>
-        <h1 style={{ fontSize: "42px", textAlign: "center" }}>
-          Response Team Management
-        </h1>
+      <main style={mainStyle}>
+        <h1 style={titleStyle}>Response Team Management</h1>
 
-        <div style={cardStyle}>
-          <h2 style={{ textAlign: "center" }}>Create Response Team</h2>
+        <div style={formCard}>
+          <h2 style={sectionTitle}>Create Response Team</h2>
 
           <input
+            style={inputStyle}
+            name="teamName"
             placeholder="Team Name"
             value={form.teamName}
-            onChange={(e) => setForm({ ...form, teamName: e.target.value })}
-            style={inputStyle}
+            onChange={handleChange}
           />
 
           <input
+            style={inputStyle}
+            name="leaderName"
             placeholder="Leader Name"
             value={form.leaderName}
-            onChange={(e) => setForm({ ...form, leaderName: e.target.value })}
-            style={inputStyle}
+            onChange={handleChange}
           />
 
           <input
+            style={inputStyle}
+            name="contactNumber"
             placeholder="Contact Number"
             value={form.contactNumber}
-            onChange={(e) =>
-              setForm({ ...form, contactNumber: e.target.value })
-            }
-            style={inputStyle}
+            onChange={handleChange}
           />
 
           <input
+            style={inputStyle}
+            name="specialization"
             placeholder="Specialization e.g. Fire Rescue"
             value={form.specialization}
-            onChange={(e) =>
-              setForm({ ...form, specialization: e.target.value })
-            }
-            style={inputStyle}
+            onChange={handleChange}
           />
 
           <input
+            style={inputStyle}
+            name="currentLocation"
             placeholder="Current Location"
             value={form.currentLocation}
-            onChange={(e) =>
-              setForm({ ...form, currentLocation: e.target.value })
-            }
-            style={inputStyle}
+            onChange={handleChange}
           />
 
-          <div style={{ textAlign: "center" }}>
-            <button onClick={createTeam} style={buttonStyle}>
-              Create Team
-            </button>
-          </div>
+          <select
+            style={inputStyle}
+            name="status"
+            value={form.status}
+            onChange={handleChange}
+          >
+            <option value="AVAILABLE">AVAILABLE</option>
+            <option value="BUSY">BUSY</option>
+          </select>
+
+          <button style={createButton} onClick={createTeam}>
+            Create Team
+          </button>
         </div>
 
-        <div style={{ marginTop: "35px" }}>
-          <h2 style={{ textAlign: "center" }}>All Response Teams</h2>
+        <h2 style={sectionTitle}>All Response Teams</h2>
 
-          <table style={tableStyle}>
-            <thead>
-              <tr style={{ background: "#1e293b" }}>
-                <th style={thStyle}>ID</th>
-                <th style={thStyle}>Team</th>
-                <th style={thStyle}>Leader</th>
-                <th style={thStyle}>Contact</th>
-                <th style={thStyle}>Specialization</th>
-                <th style={thStyle}>Status</th>
-                <th style={thStyle}>Location</th>
-                <th style={thStyle}>Action</th>
+        <table style={tableStyle}>
+          <thead>
+            <tr>
+              <th style={thStyle}>ID</th>
+              <th style={thStyle}>Team</th>
+              <th style={thStyle}>Leader</th>
+              <th style={thStyle}>Contact</th>
+              <th style={thStyle}>Specialization</th>
+              <th style={thStyle}>Status</th>
+              <th style={thStyle}>Location</th>
+              <th style={thStyle}>Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {teams.length === 0 ? (
+              <tr>
+                <td style={tdStyle} colSpan="8">
+                  No teams found
+                </td>
               </tr>
-            </thead>
-
-            <tbody>
-              {teams.map((team) => (
-                <tr key={team.id} style={{ background: "#0f172a" }}>
+            ) : (
+              teams.map((team) => (
+                <tr key={team.id}>
                   <td style={tdStyle}>{team.id}</td>
                   <td style={tdStyle}>{team.teamName}</td>
                   <td style={tdStyle}>{team.leaderName}</td>
@@ -143,51 +179,69 @@ function Teams() {
                   <td style={tdStyle}>{team.currentLocation}</td>
                   <td style={tdStyle}>
                     <button
-                      onClick={() => updateStatus(team.id, "AVAILABLE")}
-                      style={smallButton}
+                      style={deleteButton}
+                      onClick={() => deleteTeam(team.id)}
                     >
-                      Available
-                    </button>
-
-                    <button
-                      onClick={() => updateStatus(team.id, "BUSY")}
-                      style={{ ...smallButton, background: "orange" }}
-                    >
-                      Busy
+                      Delete
                     </button>
                   </td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              ))
+            )}
+          </tbody>
+        </table>
       </main>
     </div>
   );
 }
 
-const cardStyle = {
+const pageStyle = {
+  background: "#020617",
+  minHeight: "100vh",
+  color: "white",
+};
+
+const mainStyle = {
+  marginLeft: "270px",
+  padding: "35px",
+};
+
+const titleStyle = {
+  textAlign: "center",
+  fontSize: "38px",
+  marginBottom: "25px",
+};
+
+const formCard = {
   background: "#0f172a",
-  padding: "25px",
+  padding: "30px",
   borderRadius: "14px",
-  marginTop: "25px",
   border: "1px solid #1e293b",
+  maxWidth: "850px",
+  margin: "0 auto 35px auto",
+};
+
+const sectionTitle = {
+  textAlign: "center",
+  marginBottom: "20px",
+  color: "#e5e7eb",
 };
 
 const inputStyle = {
   width: "100%",
   padding: "12px",
-  marginTop: "10px",
+  marginBottom: "12px",
+  borderRadius: "8px",
+  border: "1px solid #334155",
   background: "#020617",
   color: "white",
-  border: "1px solid #334155",
-  borderRadius: "8px",
 };
 
-const buttonStyle = {
-  padding: "12px 20px",
-  marginTop: "15px",
-  background: "red",
+const createButton = {
+  display: "block",
+  margin: "10px auto 0 auto",
+  padding: "12px 25px",
+  background: "#dc2626",
   color: "white",
   border: "none",
   borderRadius: "8px",
@@ -197,24 +251,26 @@ const buttonStyle = {
 const tableStyle = {
   width: "100%",
   borderCollapse: "collapse",
-  marginTop: "15px",
+  background: "#0f172a",
+  marginTop: "20px",
 };
 
 const thStyle = {
+  border: "1px solid #1e293b",
   padding: "12px",
-  border: "1px solid #334155",
+  color: "#93c5fd",
+  background: "#111827",
 };
 
 const tdStyle = {
+  border: "1px solid #1e293b",
   padding: "12px",
-  border: "1px solid #334155",
   textAlign: "center",
 };
 
-const smallButton = {
-  padding: "7px 10px",
-  margin: "3px",
-  background: "green",
+const deleteButton = {
+  padding: "8px 14px",
+  background: "#991b1b",
   color: "white",
   border: "none",
   borderRadius: "6px",

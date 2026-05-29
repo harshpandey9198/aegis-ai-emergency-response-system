@@ -4,199 +4,283 @@ import Sidebar from "../components/Sidebar";
 
 function Incidents() {
   const [incidents, setIncidents] = useState([]);
-  const [teams, setTeams] = useState([]);
-  const [selectedTeams, setSelectedTeams] = useState({});
 
   const [form, setForm] = useState({
     title: "",
-    description: "",
     location: "",
+    description: "",
+    emergencyType: "FIRE",
+    severity: "HIGH",
+    status: "PENDING",
+    latitude: 28.6139,
+    longitude: 77.209,
   });
 
   const loadIncidents = async () => {
-    const response = await API.get("/incidents");
-    setIncidents(response.data);
-  };
-
-  const loadTeams = async () => {
-    const response = await API.get("/teams");
-    setTeams(response.data);
-  };
-
-  const createIncident = async () => {
-    await API.post("/incidents", form);
-    setForm({ title: "", description: "", location: "" });
-    loadIncidents();
-    alert("Incident reported successfully");
-  };
-
-  const resolveIncident = async (id) => {
-    await API.put(`/incidents/${id}/status?status=RESOLVED`);
-    loadIncidents();
-  };
-
-  const assignTeam = async (incidentId) => {
-    const teamId = selectedTeams[incidentId];
-
-    if (!teamId) {
-      alert("Please select a team");
-      return;
+    try {
+      const response = await API.get("/api/incidents");
+      setIncidents(response.data || []);
+    } catch (error) {
+      console.error("Failed to load incidents:", error);
+      alert("Failed to load incidents");
     }
-
-    await API.put(`/incidents/${incidentId}/assign-team/${teamId}`);
-    loadIncidents();
-    alert("Team assigned successfully");
   };
 
   useEffect(() => {
     loadIncidents();
-    loadTeams();
   }, []);
 
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const submitIncident = async () => {
+    if (!form.title || !form.location || !form.description) {
+      alert("Please fill title, location and description");
+      return;
+    }
+
+    try {
+      await API.post("/api/incidents", {
+        ...form,
+        latitude: Number(form.latitude),
+        longitude: Number(form.longitude),
+      });
+
+      alert("Incident submitted successfully ✅");
+
+      setForm({
+        title: "",
+        location: "",
+        description: "",
+        emergencyType: "FIRE",
+        severity: "HIGH",
+        status: "PENDING",
+        latitude: 28.6139,
+        longitude: 77.209,
+      });
+
+      loadIncidents();
+    } catch (error) {
+      console.error("Failed to submit incident:", error);
+      alert("Failed to submit incident");
+    }
+  };
+
+  const deleteIncident = async (id) => {
+    try {
+      await API.delete(`/api/incidents/${id}`);
+      alert("Incident deleted successfully");
+      loadIncidents();
+    } catch (error) {
+      console.error("Failed to delete incident:", error);
+      alert("Failed to delete incident");
+    }
+  };
+
   return (
-    <div style={{ background: "#020617", color: "white", minHeight: "100vh" }}>
+    <div style={pageStyle}>
       <Sidebar />
 
-      <main style={{ marginLeft: "270px", padding: "35px" }}>
-        <h1 style={{ fontSize: "42px", textAlign: "center" }}>
-          Incident Management
-        </h1>
+      <main style={mainStyle}>
+        <h1 style={titleStyle}>Incident Management</h1>
 
-        <div style={cardStyle}>
-          <h2 style={{ textAlign: "center" }}>Report Emergency</h2>
+        <div style={formCard}>
+          <h2 style={sectionTitle}>Report Emergency</h2>
 
           <input
+            style={inputStyle}
+            name="title"
             placeholder="Title"
             value={form.title}
-            onChange={(e) => setForm({ ...form, title: e.target.value })}
-            style={inputStyle}
+            onChange={handleChange}
           />
 
           <input
+            style={inputStyle}
+            name="location"
             placeholder="Location"
             value={form.location}
-            onChange={(e) => setForm({ ...form, location: e.target.value })}
-            style={inputStyle}
+            onChange={handleChange}
           />
 
           <textarea
+            style={textareaStyle}
+            name="description"
             placeholder="Description"
             value={form.description}
-            onChange={(e) => setForm({ ...form, description: e.target.value })}
-            style={{ ...inputStyle, height: "90px" }}
+            onChange={handleChange}
           />
 
-          <div style={{ textAlign: "center" }}>
-            <button onClick={createIncident} style={buttonStyle}>
-              Submit Incident
-            </button>
-          </div>
+          <select
+            style={inputStyle}
+            name="emergencyType"
+            value={form.emergencyType}
+            onChange={handleChange}
+          >
+            <option value="FIRE">FIRE</option>
+            <option value="ACCIDENT">ACCIDENT</option>
+            <option value="FLOOD">FLOOD</option>
+            <option value="MEDICAL">MEDICAL</option>
+          </select>
+
+          <select
+            style={inputStyle}
+            name="severity"
+            value={form.severity}
+            onChange={handleChange}
+          >
+            <option value="LOW">LOW</option>
+            <option value="NORMAL">NORMAL</option>
+            <option value="HIGH">HIGH</option>
+            <option value="CRITICAL">CRITICAL</option>
+          </select>
+
+          <select
+            style={inputStyle}
+            name="status"
+            value={form.status}
+            onChange={handleChange}
+          >
+            <option value="PENDING">PENDING</option>
+            <option value="DISPATCHED">DISPATCHED</option>
+            <option value="RESOLVED">RESOLVED</option>
+          </select>
+
+          <input
+            style={inputStyle}
+            name="latitude"
+            placeholder="Latitude"
+            value={form.latitude}
+            onChange={handleChange}
+          />
+
+          <input
+            style={inputStyle}
+            name="longitude"
+            placeholder="Longitude"
+            value={form.longitude}
+            onChange={handleChange}
+          />
+
+          <button style={submitButton} onClick={submitIncident}>
+            Submit Incident
+          </button>
         </div>
 
-        <div style={{ marginTop: "35px" }}>
-          <h2 style={{ textAlign: "center" }}>All Incidents</h2>
+        <h2 style={sectionTitle}>All Incidents</h2>
 
-          <table style={tableStyle}>
-            <thead>
-              <tr style={{ background: "#1e293b" }}>
-                <th style={thStyle}>ID</th>
-                <th style={thStyle}>Title</th>
-                <th style={thStyle}>Type</th>
-                <th style={thStyle}>Severity</th>
-                <th style={thStyle}>Status</th>
-                <th style={thStyle}>Location</th>
-                <th style={thStyle}>Assigned Team</th>
-                <th style={thStyle}>Assign</th>
-                <th style={thStyle}>Action</th>
+        <table style={tableStyle}>
+          <thead>
+            <tr>
+              <th style={thStyle}>ID</th>
+              <th style={thStyle}>Title</th>
+              <th style={thStyle}>Type</th>
+              <th style={thStyle}>Severity</th>
+              <th style={thStyle}>Status</th>
+              <th style={thStyle}>Location</th>
+              <th style={thStyle}>Latitude</th>
+              <th style={thStyle}>Longitude</th>
+              <th style={thStyle}>Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {incidents.length === 0 ? (
+              <tr>
+                <td style={tdStyle} colSpan="9">
+                  No incidents found
+                </td>
               </tr>
-            </thead>
-
-            <tbody>
-              {incidents.map((incident) => (
-                <tr key={incident.id} style={{ background: "#0f172a" }}>
+            ) : (
+              incidents.map((incident) => (
+                <tr key={incident.id}>
                   <td style={tdStyle}>{incident.id}</td>
                   <td style={tdStyle}>{incident.title}</td>
                   <td style={tdStyle}>{incident.emergencyType}</td>
                   <td style={tdStyle}>{incident.severity}</td>
                   <td style={tdStyle}>{incident.status}</td>
                   <td style={tdStyle}>{incident.location}</td>
+                  <td style={tdStyle}>{incident.latitude}</td>
+                  <td style={tdStyle}>{incident.longitude}</td>
                   <td style={tdStyle}>
-                    {incident.assignedTeamId
-                      ? `Team #${incident.assignedTeamId}`
-                      : "Not Assigned"}
-                  </td>
-
-                  <td style={tdStyle}>
-                    <select
-                      value={selectedTeams[incident.id] || ""}
-                      onChange={(e) =>
-                        setSelectedTeams({
-                          ...selectedTeams,
-                          [incident.id]: e.target.value,
-                        })
-                      }
-                      style={selectStyle}
-                    >
-                      <option value="">Select Team</option>
-                      {teams.map((team) => (
-                        <option key={team.id} value={team.id}>
-                          {team.teamName} - {team.status}
-                        </option>
-                      ))}
-                    </select>
-
                     <button
-                      onClick={() => assignTeam(incident.id)}
-                      style={smallButton}
+                      style={deleteButton}
+                      onClick={() => deleteIncident(incident.id)}
                     >
-                      Assign
+                      Delete
                     </button>
                   </td>
-
-                  <td style={tdStyle}>
-                    {incident.status !== "RESOLVED" ? (
-                      <button
-                        onClick={() => resolveIncident(incident.id)}
-                        style={{ ...smallButton, background: "green" }}
-                      >
-                        Resolve
-                      </button>
-                    ) : (
-                      "Done"
-                    )}
-                  </td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              ))
+            )}
+          </tbody>
+        </table>
       </main>
     </div>
   );
 }
 
-const cardStyle = {
+const pageStyle = {
+  background: "#020617",
+  minHeight: "100vh",
+  color: "white",
+};
+
+const mainStyle = {
+  marginLeft: "270px",
+  padding: "35px",
+};
+
+const titleStyle = {
+  textAlign: "center",
+  fontSize: "36px",
+  marginBottom: "25px",
+};
+
+const formCard = {
   background: "#0f172a",
-  padding: "25px",
+  padding: "30px",
   borderRadius: "14px",
-  marginTop: "25px",
   border: "1px solid #1e293b",
+  maxWidth: "850px",
+  margin: "0 auto 35px auto",
+};
+
+const sectionTitle = {
+  textAlign: "center",
+  marginBottom: "20px",
 };
 
 const inputStyle = {
   width: "100%",
   padding: "12px",
-  marginTop: "10px",
+  marginBottom: "12px",
+  borderRadius: "8px",
+  border: "1px solid #334155",
   background: "#020617",
   color: "white",
-  border: "1px solid #334155",
-  borderRadius: "8px",
 };
 
-const buttonStyle = {
-  padding: "12px 20px",
-  marginTop: "15px",
-  background: "red",
+const textareaStyle = {
+  width: "100%",
+  height: "110px",
+  padding: "12px",
+  marginBottom: "12px",
+  borderRadius: "8px",
+  border: "1px solid #334155",
+  background: "#020617",
+  color: "white",
+};
+
+const submitButton = {
+  display: "block",
+  margin: "10px auto 0 auto",
+  padding: "12px 25px",
+  background: "#dc2626",
   color: "white",
   border: "none",
   borderRadius: "8px",
@@ -206,32 +290,26 @@ const buttonStyle = {
 const tableStyle = {
   width: "100%",
   borderCollapse: "collapse",
-  marginTop: "15px",
+  background: "#0f172a",
+  marginTop: "20px",
 };
 
 const thStyle = {
+  border: "1px solid #1e293b",
   padding: "12px",
-  border: "1px solid #334155",
+  color: "#93c5fd",
+  background: "#111827",
 };
 
 const tdStyle = {
+  border: "1px solid #1e293b",
   padding: "12px",
-  border: "1px solid #334155",
   textAlign: "center",
 };
 
-const selectStyle = {
-  padding: "8px",
-  background: "#020617",
-  color: "white",
-  border: "1px solid #334155",
-  borderRadius: "6px",
-};
-
-const smallButton = {
-  padding: "7px 10px",
-  margin: "4px",
-  background: "red",
+const deleteButton = {
+  padding: "8px 14px",
+  background: "#991b1b",
   color: "white",
   border: "none",
   borderRadius: "6px",
