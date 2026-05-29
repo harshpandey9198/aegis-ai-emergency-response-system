@@ -26,6 +26,7 @@ ChartJS.register(
 
 function Dashboard() {
   const navigate = useNavigate();
+
   const [summary, setSummary] = useState(null);
 
   const loadSummary = async () => {
@@ -33,7 +34,9 @@ function Dashboard() {
       const response = await API.get("/api/analytics/summary");
       setSummary(response.data);
     } catch (error) {
+      console.error("Analytics error:", error);
       alert("Analytics load failed. Please check backend.");
+      setSummary({});
     }
   };
 
@@ -41,16 +44,16 @@ function Dashboard() {
     loadSummary();
   }, []);
 
-  const incidentTypeData = summary && {
+  const incidentTypeData = {
     labels: ["Fire", "Accident", "Flood", "Medical"],
     datasets: [
       {
         label: "Incidents",
         data: [
-          summary.fireIncidents || 0,
-          summary.accidentIncidents || 0,
-          summary.floodIncidents || 0,
-          summary.medicalIncidents || 0,
+          summary?.fireIncidents || 0,
+          summary?.accidentIncidents || 0,
+          summary?.floodIncidents || 0,
+          summary?.medicalIncidents || 0,
         ],
         backgroundColor: ["#ef4444", "#f97316", "#3b82f6", "#22c55e"],
         borderColor: "#020617",
@@ -59,12 +62,12 @@ function Dashboard() {
     ],
   };
 
-  const severityData = summary && {
+  const severityData = {
     labels: ["High", "Critical"],
     datasets: [
       {
         label: "Severity Count",
-        data: [summary.highSeverity || 0, summary.criticalSeverity || 0],
+        data: [summary?.highSeverity || 0, summary?.criticalSeverity || 0],
         backgroundColor: ["#f97316", "#ef4444"],
         borderColor: "#020617",
         borderWidth: 2,
@@ -127,7 +130,6 @@ function Dashboard() {
             <div style={dashboardGrid}>
               <div style={chartCard}>
                 <h2 style={sectionTitle}>Incident Type Analysis</h2>
-
                 <div style={pieWrapper}>
                   <Pie data={incidentTypeData} />
                 </div>
@@ -148,7 +150,6 @@ function Dashboard() {
 
               <div style={chartCard}>
                 <h2 style={sectionTitle}>Severity Breakdown</h2>
-
                 <Bar data={severityData} />
               </div>
             </div>
