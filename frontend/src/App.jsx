@@ -6,6 +6,7 @@ import Incidents from "./pages/Incidents";
 import Assistant from "./pages/Assistant";
 import Teams from "./pages/Teams";
 import LiveMap from "./pages/LiveMap";
+import Register from "./pages/Register";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -23,6 +24,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/register" element={<Register />} />
 
         <Route
           path="/incidents"
